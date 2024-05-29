@@ -30,7 +30,7 @@ type ReadWriteCloser interface {
 }
 
 // TunAdapter represents a running TUN interface and extends the
-// ruvchain.Adapter type. In order to use the TUN adapter with Yggdrasil, you
+// ruvchain.Adapter type. In order to use the TUN adapter with Ruvchain, you
 // should pass this object to the ruvchain.SetRouterAdapter() function before
 // calling ruvchain.Start().
 type TunAdapter struct {
@@ -97,7 +97,7 @@ func MaximumMTU() uint64 {
 }
 
 // Init initialises the TUN module. You must have acquired a Listener from
-// the Yggdrasil core before this point and it must not be in use elsewhere.
+// the Ruvchain core before this point and it must not be in use elsewhere.
 func New(rwc ReadWriteCloser, log core.Logger, opts ...SetupOption) (*TunAdapter, error) {
 	tun := &TunAdapter{
 		rwc: rwc,

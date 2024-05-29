@@ -1,5 +1,5 @@
 [Unit]
-Description=Yggdrasil Network
+Description=Ruvchain Network
 Wants=network-online.target
 Wants=ruvchain-default-config.service
 After=network-online.target

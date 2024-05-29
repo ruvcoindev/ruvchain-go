@@ -15,7 +15,7 @@ command -v mkbom >/dev/null 2>&1 || (
   sudo make install || (echo "Failed to build mkbom"; exit 1)
 )
 
-# Build Yggdrasil
+# Build Ruvchain
 echo "running GO111MODULE=on GOOS=darwin GOARCH=${PKGARCH-amd64} ./build"
 GO111MODULE=on GOOS=darwin GOARCH=${PKGARCH-amd64} ./build
 
@@ -49,19 +49,19 @@ cat > pkgbuild/scripts/postinstall << EOF
 # Normalise the config if it exists, generate it if it doesn't
 if [ -f /etc/ruvchain.conf ];
 then
-  mkdir -p /Library/Preferences/Yggdrasil
-  echo "Backing up configuration file to /Library/Preferences/Yggdrasil/ruvchain.conf.`date +%Y%m%d`"
-  cp /etc/ruvchain.conf /Library/Preferences/Yggdrasil/ruvchain.conf.`date +%Y%m%d`
+  mkdir -p /Library/Preferences/Ruvchain
+  echo "Backing up configuration file to /Library/Preferences/Ruvchain/ruvchain.conf.`date +%Y%m%d`"
+  cp /etc/ruvchain.conf /Library/Preferences/Ruvchain/ruvchain.conf.`date +%Y%m%d`
   echo "Normalising /etc/ruvchain.conf"
-  /usr/local/bin/ruvchain -useconffile /Library/Preferences/Yggdrasil/ruvchain.conf.`date +%Y%m%d` -normaliseconf > /etc/ruvchain.conf
+  /usr/local/bin/ruvchain -useconffile /Library/Preferences/Ruvchain/ruvchain.conf.`date +%Y%m%d` -normaliseconf > /etc/ruvchain.conf
 else
   /usr/local/bin/ruvchain -genconf > /etc/ruvchain.conf
 fi
 
-# Unload existing Yggdrasil launchd service, if possible
+# Unload existing Ruvchain launchd service, if possible
 test -f /Library/LaunchDaemons/ruvchain.plist && (launchctl unload /Library/LaunchDaemons/ruvchain.plist || true)
 
-# Load Yggdrasil launchd service and start Yggdrasil
+# Load Ruvchain launchd service and start Ruvchain
 launchctl load /Library/LaunchDaemons/ruvchain.plist
 EOF
 
@@ -98,7 +98,7 @@ EOF
 cat > pkgbuild/flat/Distribution << EOF
 <?xml version="1.0" encoding="utf-8"?>
 <installer-script minSpecVersion="1.000000" authoringTool="com.apple.PackageMaker" authoringToolVersion="3.0.3" authoringToolBuild="174">
-    <title>Yggdrasil (${PKGNAME}-${PKGVERSION})</title>
+    <title>Ruvchain (${PKGNAME}-${PKGVERSION})</title>
     <options customize="never" allow-external-scripts="no" hostArchitectures="${PKGHOSTARCH}" />
     <domains enable_anywhere="true"/>
     <installation-check script="pm_install_check();"/>
@@ -106,7 +106,7 @@ cat > pkgbuild/flat/Distribution << EOF
     function pm_install_check() {
       if(!(system.compareVersions(system.version.ProductVersion,'10.10') >= 0)) {
         my.result.title = 'Failure';
-        my.result.message = 'You need at least Mac OS X 10.10 to install Yggdrasil.';
+        my.result.message = 'You need at least Mac OS X 10.10 to install Ruvchain.';
         my.result.type = 'Fatal';
         return false;
       }

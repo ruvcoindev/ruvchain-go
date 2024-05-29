@@ -56,11 +56,11 @@ Architecture: $PKGARCH
 Replaces: $PKGREPLACES
 Conflicts: $PKGREPLACES
 Maintainer: Neil Alexander <neilalexander@users.noreply.github.com>
-Description: Yggdrasil Network
- Yggdrasil is an early-stage implementation of a fully end-to-end encrypted IPv6
+Description: Ruvchain Network
+ Ruvchain is an early-stage implementation of a fully end-to-end encrypted IPv6
  network. It is lightweight, self-arranging, supported on multiple platforms and
  allows pretty much any IPv6-capable application to communicate securely with
- other Yggdrasil nodes.
+ other Ruvchain nodes.
 EOF
 cat > /tmp/$PKGNAME/debian/copyright << EOF
 Please see https://github.com/ruvcoindev/ruvchain-go/

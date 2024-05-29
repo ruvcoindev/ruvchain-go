@@ -45,7 +45,7 @@ func run() int {
 	if cmdLineEnv.ver {
 		fmt.Println("Build name:", version.BuildName())
 		fmt.Println("Build version:", version.BuildVersion())
-		fmt.Println("To get the version number of the running Yggdrasil node, run", os.Args[0], "getSelf")
+		fmt.Println("To get the version number of the running Ruvchain node, run", os.Args[0], "getSelf")
 		return 0
 	}
 

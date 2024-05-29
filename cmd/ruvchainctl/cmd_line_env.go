@@ -40,7 +40,7 @@ func (cmdLineEnv *CmdLineEnv) parseFlagsAndArgs() {
 		fmt.Println("  - ", os.Args[0], "getPeers")
 		fmt.Println("  - ", os.Args[0], "setTunTap name=auto mtu=1500 tap_mode=false")
 		fmt.Println("  - ", os.Args[0], "-endpoint=tcp://localhost:5001 getPeers")
-		fmt.Println("  - ", os.Args[0], "-endpoint=unix:///var/run/ygg.sock getPeers")
+		fmt.Println("  - ", os.Args[0], "-endpoint=unix:///var/run/ruv.sock getPeers")
 	}
 
 	server := flag.String("endpoint", cmdLineEnv.endpoint, "Admin socket endpoint")

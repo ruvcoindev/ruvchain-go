@@ -20,8 +20,8 @@ import (
 )
 
 // Multicast represents the multicast advertisement and discovery mechanism used
-// by Yggdrasil to find peers on the same subnet. When a beacon is received on a
-// configured multicast interface, Yggdrasil will attempt to peer with that node
+// by Ruvchain to find peers on the same subnet. When a beacon is received on a
+// configured multicast interface, Ruvchain will attempt to peer with that node
 // automatically.
 type Multicast struct {
 	phony.Inbox

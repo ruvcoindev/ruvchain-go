@@ -37,7 +37,7 @@ type node struct {
 	admin     *admin.AdminSocket
 }
 
-// The main function is responsible for configuring and starting Yggdrasil.
+// The main function is responsible for configuring and starting Ruvchain.
 func main() {
 	genconf := flag.Bool("genconf", false, "print a new config to stdout")
 	useconf := flag.Bool("useconf", false, "read HJSON/JSON config from stdin")
@@ -188,7 +188,7 @@ func main() {
 
 	n := &node{}
 
-	// Set up the Yggdrasil node itself.
+	// Set up the Ruvchain node itself.
 	{
 		options := []core.SetupOption{
 			core.NodeInfo(cfg.NodeInfo),

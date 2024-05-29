@@ -1,5 +1,5 @@
 [Unit]
-Description=Yggdrasil default config generator
+Description=Ruvchain default config generator
 ConditionPathExists=|!/etc/ruvchain/ruvchain.conf
 ConditionFileNotEmpty=|!/etc/ruvchain/ruvchain.conf
 Wants=local-fs.target

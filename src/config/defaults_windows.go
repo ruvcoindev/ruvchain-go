@@ -11,7 +11,7 @@ func getDefaults() platformDefaultParameters {
 		DefaultAdminListen: "tcp://localhost:5001",
 
 		// Configuration (used for ruvchainctl)
-		DefaultConfigFile: "C:\\Program Files\\Yggdrasil\\ruvchain.conf",
+		DefaultConfigFile: "C:\\Program Files\\Ruvchain\\ruvchain.conf",
 
 		// Multicast interfaces
 		DefaultMulticastInterfaces: []MulticastInterfaceConfig{
@@ -21,6 +21,6 @@ func getDefaults() platformDefaultParameters {
 		// TUN
 		MaximumIfMTU:  65535,
 		DefaultIfMTU:  65535,
-		DefaultIfName: "Yggdrasil",
+		DefaultIfName: "Ruvchain",
 	}
 }

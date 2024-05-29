@@ -1,18 +1,18 @@
-# Yggdrasil
+# Ruvchain
 
 [![Build status](https://github.com/ruvcoindev/ruvchain-go/actions/workflows/ci.yml/badge.svg)](https://github.com/ruvcoindev/ruvchain-go/actions/workflows/ci.yml)
 
 ## Introduction
 
-Yggdrasil is an early-stage implementation of a fully end-to-end encrypted IPv6
+Ruvchain is an early-stage implementation of a fully end-to-end encrypted IPv6
 network. It is lightweight, self-arranging, supported on multiple platforms and
 allows pretty much any IPv6-capable application to communicate securely with
-other Yggdrasil nodes. Yggdrasil does not require you to have IPv6 Internet
+other Ruvchain nodes. Ruvchain does not require you to have IPv6 Internet
 connectivity - it also works over IPv4.
 
 ## Supported Platforms
 
-Yggdrasil works on a number of platforms, including Linux, macOS, Ubiquiti
+Ruvchain works on a number of platforms, including Linux, macOS, Ubiquiti
 EdgeRouter, VyOS, Windows, FreeBSD, OpenBSD and OpenWrt.
 
 Please see our [Installation](https://ruvcoindev.github.io/installation.html)
@@ -53,7 +53,7 @@ programmatically):
 You will need to edit the `ruvchain.conf` file to add or remove peers, modify
 other configuration such as listen addresses or multicast addresses, etc.
 
-### Run Yggdrasil
+### Run Ruvchain
 
 To run with the generated static configuration:
 
@@ -68,16 +68,16 @@ at each startup, instead of using a static configuration file):
 ./ruvchain -autoconf
 ```
 
-You will likely need to run Yggdrasil as a privileged user or under `sudo`,
+You will likely need to run Ruvchain as a privileged user or under `sudo`,
 unless you have permission to create TUN/TAP adapters. On Linux this can be done
-by giving the Yggdrasil binary the `CAP_NET_ADMIN` capability.
+by giving the Ruvchain binary the `CAP_NET_ADMIN` capability.
 
 ## Documentation
 
 Documentation is available [on our website](https://ruvcoindev.github.io).
 
-- [Installing Yggdrasil](https://ruvcoindev.github.io/installation.html)
-- [Configuring Yggdrasil](https://ruvcoindev.github.io/configuration.html)
+- [Installing Ruvchain](https://ruvcoindev.github.io/installation.html)
+- [Configuring Ruvchain](https://ruvcoindev.github.io/configuration.html)
 - [Frequently asked questions](https://ruvcoindev.github.io/faq.html)
 - [Version changelog](CHANGELOG.md)
 
