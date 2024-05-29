@@ -67,7 +67,7 @@ func New(core *core.Core, log *log.Logger, opts ...SetupOption) (*Multicast, err
 		_interfaces: make(map[string]*interfaceInfo),
 	}
 	m.config._interfaces = map[MulticastInterface]struct{}{}
-	m.config._groupAddr = GroupAddress("[fa00::]:5001")
+	m.config._groupAddr = GroupAddress("[::]:5001")
 	for _, opt := range opts {
 		m._applyOption(opt)
 	}
