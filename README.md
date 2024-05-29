@@ -79,7 +79,7 @@ Documentation is available [on our website](https://ruvcoindev.github.io).
 - [Installing Ruvchain](https://ruvcoindev.github.io/installation.html)
 - [Configuring Ruvchain](https://ruvcoindev.github.io/configuration.html)
 - [Frequently asked questions](https://ruvcoindev.github.io/faq.html)
-- [Version changelog](CHANGELOG.md)
+
 
 ## Community
 

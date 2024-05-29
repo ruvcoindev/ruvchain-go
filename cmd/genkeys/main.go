@@ -42,7 +42,9 @@ func main() {
 			fmt.Println("-----", time.Since(start))
 			fmt.Println("Priv:", hex.EncodeToString(newKey.priv))
 			fmt.Println("Pub:", hex.EncodeToString(newKey.pub))
-			addr := address.AddrForKey(newKey.pub)
+			logger := log.New(os.Stdout, "", log.Flags())
+			core, _ := c.New(newKey.priv, logger, nil)
+			addr := core.AddrForKey(newKey.pub)
 			fmt.Println("IP:", net.IP(addr[:]).String())
 		}
 	}

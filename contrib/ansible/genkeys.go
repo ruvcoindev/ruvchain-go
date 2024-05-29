@@ -1,5 +1,5 @@
 /*
-This file generates crypto keys for [ansible-ruvchain](https://github.com/jcgruenhage/ansible-ruvchain/)
+This file generates crypto keys for [ansible-ruvchain](https://github.com/ruvcoindev/ansible-ruvchain/)
 */
 package main
 
