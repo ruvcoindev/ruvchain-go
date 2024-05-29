@@ -17,6 +17,7 @@ import (
 	"net"
 	"runtime"
 	"time"
+	"os"
 
 	"github.com/ruvcoindev/ruvchain-go/src/address"
 )
