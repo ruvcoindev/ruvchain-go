@@ -40,7 +40,7 @@ func (s *Subnet) IsValid() bool {
 			return false
 		}
 	}
-	return (*s)[l-1] == prefix[l-1]|0x01
+	return (*s)[l-1] == prefix[l-1]|0xfb
 }
 
 // AddrForKey takes an ed25519.PublicKey as an argument and returns an *Address.
@@ -109,7 +109,7 @@ func SubnetForKey(publicKey ed25519.PublicKey) *Subnet {
 	var snet Subnet
 	copy(snet[:], addr[:])
 	prefix := GetPrefix() // nolint:staticcheck
-	snet[len(prefix)-1] |= 0x01
+	snet[len(prefix)-1] |= 0xfb
 	return &snet
 }
 
