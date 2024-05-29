@@ -17,13 +17,13 @@ func TestAddress_Address_IsValid(t *testing.T) {
 		t.Fatal("invalid address marked as valid")
 	}
 
-	address[0] = 0x03
+	address[0] = 0xfb
 
 	if address.IsValid() {
 		t.Fatal("invalid address marked as valid")
 	}
 
-	address[0] = 0x02
+	address[0] = 0xfa
 
 	if !address.IsValid() {
 		t.Fatal("valid address marked as invalid")
@@ -40,13 +40,13 @@ func TestAddress_Subnet_IsValid(t *testing.T) {
 		t.Fatal("invalid subnet marked as valid")
 	}
 
-	subnet[0] = 0x02
+	subnet[0] = 0xfa
 
 	if subnet.IsValid() {
 		t.Fatal("invalid subnet marked as valid")
 	}
 
-	subnet[0] = 0x03
+	subnet[0] = 0xfb
 
 	if !subnet.IsValid() {
 		t.Fatal("valid subnet marked as invalid")
