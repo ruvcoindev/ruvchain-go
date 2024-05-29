@@ -14,7 +14,7 @@ import (
 	"github.com/Arceliar/phony"
 	"github.com/gologme/log"
 
-	"github.com/yggdrasil-network/yggdrasil-go/src/core"
+	"github.com/ruvcoindev/ruvchain-go/src/core"
 	"golang.org/x/crypto/blake2b"
 	"golang.org/x/net/ipv6"
 )

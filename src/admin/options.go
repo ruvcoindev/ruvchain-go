@@ -10,7 +10,7 @@ import (
 
 	"github.com/Arceliar/ironwood/network"
 
-	"github.com/yggdrasil-network/yggdrasil-go/src/address"
+	"github.com/ruvcoindev/ruvchain-go/src/address"
 )
 
 func (c *AdminSocket) _applyOption(opt SetupOption) {

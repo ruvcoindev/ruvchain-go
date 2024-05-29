@@ -14,9 +14,9 @@ import (
 	"github.com/Arceliar/phony"
 	"golang.zx2c4.com/wireguard/tun"
 
-	"github.com/yggdrasil-network/yggdrasil-go/src/address"
-	"github.com/yggdrasil-network/yggdrasil-go/src/config"
-	"github.com/yggdrasil-network/yggdrasil-go/src/core"
+	"github.com/ruvcoindev/ruvchain-go/src/address"
+	"github.com/ruvcoindev/ruvchain-go/src/config"
+	"github.com/ruvcoindev/ruvchain-go/src/core"
 )
 
 type MTU uint16
@@ -30,9 +30,9 @@ type ReadWriteCloser interface {
 }
 
 // TunAdapter represents a running TUN interface and extends the
-// yggdrasil.Adapter type. In order to use the TUN adapter with Yggdrasil, you
-// should pass this object to the yggdrasil.SetRouterAdapter() function before
-// calling yggdrasil.Start().
+// ruvchain.Adapter type. In order to use the TUN adapter with Yggdrasil, you
+// should pass this object to the ruvchain.SetRouterAdapter() function before
+// calling ruvchain.Start().
 type TunAdapter struct {
 	rwc         ReadWriteCloser
 	log         core.Logger

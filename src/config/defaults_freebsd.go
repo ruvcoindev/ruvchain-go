@@ -8,10 +8,10 @@ package config
 func getDefaults() platformDefaultParameters {
 	return platformDefaultParameters{
 		// Admin
-		DefaultAdminListen: "unix:///var/run/yggdrasil.sock",
+		DefaultAdminListen: "unix:///var/run/ruvchain.sock",
 
-		// Configuration (used for yggdrasilctl)
-		DefaultConfigFile: "/usr/local/etc/yggdrasil.conf",
+		// Configuration (used for ruvchainctl)
+		DefaultConfigFile: "/usr/local/etc/ruvchain.conf",
 
 		// Multicast interfaces
 		DefaultMulticastInterfaces: []MulticastInterfaceConfig{

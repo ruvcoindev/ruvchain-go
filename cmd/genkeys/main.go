@@ -18,7 +18,7 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/yggdrasil-network/yggdrasil-go/src/address"
+	"github.com/ruvcoindev/ruvchain-go/src/address"
 )
 
 type keySet struct {

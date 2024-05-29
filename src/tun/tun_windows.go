@@ -9,7 +9,7 @@ import (
 	"log"
 	"net/netip"
 
-	"github.com/yggdrasil-network/yggdrasil-go/src/config"
+	"github.com/ruvcoindev/ruvchain-go/src/config"
 	"golang.org/x/sys/windows"
 
 	wgtun "golang.zx2c4.com/wireguard/tun"

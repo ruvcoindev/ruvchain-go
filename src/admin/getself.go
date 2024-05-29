@@ -3,7 +3,7 @@ package admin
 import (
 	"encoding/hex"
 
-	"github.com/yggdrasil-network/yggdrasil-go/src/version"
+	"github.com/ruvcoindev/ruvchain-go/src/version"
 )
 
 type GetSelfRequest struct{}

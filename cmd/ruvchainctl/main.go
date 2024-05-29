@@ -14,11 +14,11 @@ import (
 	"time"
 
 	"github.com/olekukonko/tablewriter"
-	"github.com/yggdrasil-network/yggdrasil-go/src/admin"
-	"github.com/yggdrasil-network/yggdrasil-go/src/core"
-	"github.com/yggdrasil-network/yggdrasil-go/src/multicast"
-	"github.com/yggdrasil-network/yggdrasil-go/src/tun"
-	"github.com/yggdrasil-network/yggdrasil-go/src/version"
+	"github.com/ruvcoindev/ruvchain-go/src/admin"
+	"github.com/ruvcoindev/ruvchain-go/src/core"
+	"github.com/ruvcoindev/ruvchain-go/src/multicast"
+	"github.com/ruvcoindev/ruvchain-go/src/tun"
+	"github.com/ruvcoindev/ruvchain-go/src/version"
 )
 
 func main() {

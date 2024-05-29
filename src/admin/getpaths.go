@@ -6,7 +6,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/yggdrasil-network/yggdrasil-go/src/address"
+	"github.com/ruvcoindev/ruvchain-go/src/address"
 )
 
 type GetPathsRequest struct {

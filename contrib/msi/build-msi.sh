@@ -29,9 +29,9 @@ cat > updateconfig.bat << EOF
 if not exist %ALLUSERSPROFILE%\\Yggdrasil (
   mkdir %ALLUSERSPROFILE%\\Yggdrasil
 )
-if not exist %ALLUSERSPROFILE%\\Yggdrasil\\yggdrasil.conf (
-  if exist yggdrasil.exe (
-    yggdrasil.exe -genconf > %ALLUSERSPROFILE%\\Yggdrasil\\yggdrasil.conf
+if not exist %ALLUSERSPROFILE%\\Yggdrasil\\ruvchain.conf (
+  if exist ruvchain.exe (
+    ruvchain.exe -genconf > %ALLUSERSPROFILE%\\Yggdrasil\\ruvchain.conf
   )
 )
 EOF
@@ -85,14 +85,14 @@ cat > wix.xml << EOF
     Language="1033"
     Codepage="1252"
     Version="${PKGVERSIONMS}"
-    Manufacturer="github.com/yggdrasil-network">
+    Manufacturer="github.com/ruvcoindev">
 
     <Package
       Id="*"
       Keywords="Installer"
       Description="Yggdrasil Network Installer"
       Comments="Yggdrasil Network standalone router for Windows."
-      Manufacturer="github.com/yggdrasil-network"
+      Manufacturer="github.com/ruvcoindev"
       InstallerVersion="500"
       InstallScope="perMachine"
       Languages="1033"
@@ -115,9 +115,9 @@ cat > wix.xml << EOF
           <Component Id="MainExecutable" Guid="c2119231-2aa3-4962-867a-9759c87beb24">
             <File
               Id="Yggdrasil"
-              Name="yggdrasil.exe"
+              Name="ruvchain.exe"
               DiskId="1"
-              Source="yggdrasil.exe"
+              Source="ruvchain.exe"
               KeyPath="yes" />
 
             <File
@@ -136,12 +136,12 @@ cat > wix.xml << EOF
               Name="Yggdrasil"
               Start="auto"
               Type="ownProcess"
-              Arguments='-useconffile "%ALLUSERSPROFILE%\\Yggdrasil\\yggdrasil.conf" -logto "%ALLUSERSPROFILE%\\Yggdrasil\\yggdrasil.log"'
+              Arguments='-useconffile "%ALLUSERSPROFILE%\\Yggdrasil\\ruvchain.conf" -logto "%ALLUSERSPROFILE%\\Yggdrasil\\ruvchain.log"'
               Vital="yes" />
 
             <ServiceControl
               Id="ServiceControl"
-              Name="yggdrasil"
+              Name="ruvchain"
               Start="install"
               Stop="both"
               Remove="uninstall" />
@@ -150,9 +150,9 @@ cat > wix.xml << EOF
           <Component Id="CtrlExecutable" Guid="a916b730-974d-42a1-b687-d9d504cbb86a">
             <File
               Id="Yggdrasilctl"
-              Name="yggdrasilctl.exe"
+              Name="ruvchainctl.exe"
               DiskId="1"
-              Source="yggdrasilctl.exe"
+              Source="ruvchainctl.exe"
               KeyPath="yes"/>
           </Component>
 

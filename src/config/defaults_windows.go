@@ -10,8 +10,8 @@ func getDefaults() platformDefaultParameters {
 		// Admin
 		DefaultAdminListen: "tcp://localhost:5001",
 
-		// Configuration (used for yggdrasilctl)
-		DefaultConfigFile: "C:\\Program Files\\Yggdrasil\\yggdrasil.conf",
+		// Configuration (used for ruvchainctl)
+		DefaultConfigFile: "C:\\Program Files\\Yggdrasil\\ruvchain.conf",
 
 		// Multicast interfaces
 		DefaultMulticastInterfaces: []MulticastInterfaceConfig{
