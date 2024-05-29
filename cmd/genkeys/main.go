@@ -20,6 +20,7 @@ import (
 	"os"
 
 	"github.com/ruvcoindev/ruvchain-go/src/address"
+	"github.com/ruvcoindev/ruvchain-go/src/core"
 )
 
 type keySet struct {
