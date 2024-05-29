@@ -8,7 +8,7 @@ package config
 func getDefaults() platformDefaultParameters {
 	return platformDefaultParameters{
 		// Admin
-		DefaultAdminListen: "tcp://localhost:9001",
+		DefaultAdminListen: "tcp://localhost:5001",
 
 		// Configuration (used for yggdrasilctl)
 		DefaultConfigFile: "C:\\Program Files\\Yggdrasil\\yggdrasil.conf",
