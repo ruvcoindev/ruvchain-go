@@ -13,20 +13,12 @@ package main
 import (
 	"crypto/ed25519"
 	"encoding/hex"
-	"encoding/json"
-	"flag"
 	"fmt"
 	"net"
-	"os"
-	"os/signal"
-	"regexp"
-	"strings"
-	"sync"
-	"syscall"
+	"runtime"
 	"time"
 
-	//"github.com/ruvcoindev/ruvchain-go/src/address"
-	"github.com/ruvcoindev/ruvchain-go/src/core"
+	"github.com/ruvcoindev/ruvchain-go/src/address"
 )
 
 type keySet struct {
@@ -50,9 +42,7 @@ func main() {
 			fmt.Println("-----", time.Since(start))
 			fmt.Println("Priv:", hex.EncodeToString(newKey.priv))
 			fmt.Println("Pub:", hex.EncodeToString(newKey.pub))
-			logger := log.New(os.Stdout, "", log.Flags())
-			core, _ := c.New(newKey.priv, logger, nil)
-			addr := core.AddrForKey(newKey.pub)
+			addr := address.AddrForKey(newKey.pub)
 			fmt.Println("IP:", net.IP(addr[:]).String())
 		}
 	}
