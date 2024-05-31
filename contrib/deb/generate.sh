@@ -55,7 +55,7 @@ Priority: extra
 Architecture: $PKGARCH
 Replaces: $PKGREPLACES
 Conflicts: $PKGREPLACES
-Maintainer: Neil Alexander <neilalexander@users.noreply.github.com>
+Maintainer: ruvcoindev <admin@ruvcha.in>
 Description: Ruvchain Network
  Ruvchain is an early-stage implementation of a fully end-to-end encrypted IPv6
  network. It is lightweight, self-arranging, supported on multiple platforms and
