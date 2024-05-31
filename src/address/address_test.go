@@ -60,7 +60,7 @@ func TestAddress_AddrForKey(t *testing.T) {
 	}
 
 	expectedAddress := Address{
-		2, 0, 132, 138, 96, 79, 187, 126, 67, 132, 101, 219, 141, 182, 104, 149,
+		0xfa, 0, 132, 138, 96, 79, 187, 126, 67, 132, 101, 219, 141, 182, 104, 149,
 	}
 
 	if *AddrForKey(publicKey) != expectedAddress {
@@ -74,7 +74,7 @@ func TestAddress_SubnetForKey(t *testing.T) {
 		251, 141, 171, 8, 170, 152, 227, 5, 82, 138, 184, 79, 65, 158, 110, 251,
 	}
 
-	expectedSubnet := Subnet{3, 0, 132, 138, 96, 79, 187, 126}
+	expectedSubnet := Subnet{0xfb, 0, 132, 138, 96, 79, 187, 126}
 
 	if *SubnetForKey(publicKey) != expectedSubnet {
 		t.Fatal("invalid subnet returned")
