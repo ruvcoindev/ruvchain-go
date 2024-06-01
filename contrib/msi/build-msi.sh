@@ -1,3 +1,4 @@
+
 #!/bin/sh
 
 # This script generates an MSI file for Ruvchain for a given architecture. It
@@ -5,7 +6,7 @@
 # the system and within the PATH. This is ran currently by GitHub Actions (see
 # the workflows in the repository).
 #
-# Author: Neil Alexander <neilalexander@users.noreply.github.com>
+# Author: ruvcoindev <admin@ruvcha.in>
 
 # Get arch from command line if given
 PKGARCH=$1
