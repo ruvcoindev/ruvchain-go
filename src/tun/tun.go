@@ -148,6 +148,8 @@ func (tun *TunAdapter) _start() error {
 	tun.rwc.SetMTU(tun.MTU())
 	tun.isOpen = true
 	tun.isEnabled = true
+	tun.ch = make(chan []byte, tun.iface.BatchSize())
+	go tun.queue()
 	go tun.read()
 	go tun.write()
 	return nil
@@ -180,4 +182,13 @@ func (tun *TunAdapter) _stop() error {
 		tun.iface.Close()
 	}
 	return nil
+}
+
+const bufPoolSize = TUN_OFFSET_BYTES + 65535
+
+var bufPool = sync.Pool{
+	New: func() any {
+		b := [bufPoolSize]byte{}
+		return b[:]
+	},
 }
