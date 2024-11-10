@@ -201,10 +201,6 @@ func (a *AdminSocket) SetupAdminHandlers() {
 			return res, nil
 		},
 	)
-	//_ = a.AddHandler("getNodeInfo", []string{"key"}, t.proto.nodeinfo.nodeInfoAdminHandler)
-	//_ = a.AddHandler("debug_remoteGetSelf", []string{"key"}, t.proto.getSelfHandler)
-	//_ = a.AddHandler("debug_remoteGetPeers", []string{"key"}, t.proto.getPeersHandler)
-	//_ = a.AddHandler("debug_remoteGetDHT", []string{"key"}, t.proto.getDHTHandler)
 }
 
 // IsStarted returns true if the module has been started.
@@ -242,34 +238,33 @@ func (a *AdminSocket) listen() {
 	if err == nil {
 		switch strings.ToLower(u.Scheme) {
 		case "unix":
-			if _, err := os.Stat(listenaddr[7:]); err == nil {
-				a.log.Debugln("Admin socket", listenaddr[7:], "already exists, trying to clean up")
-				if _, err := net.DialTimeout("unix", listenaddr[7:], time.Second*2); err == nil || err.(net.Error).Timeout() {
-					a.log.Errorln("Admin socket", listenaddr[7:], "already exists and is in use by another process")
+			if _, err := os.Stat(u.Path); err == nil {
+				a.log.Debugln("Admin socket", u.Path, "already exists, trying to clean up")
+				if _, err := net.DialTimeout("unix", u.Path, time.Second*2); err == nil || err.(net.Error).Timeout() {
+					a.log.Errorln("Admin socket", u.Path, "already exists and is in use by another process")
 					os.Exit(1)
 				} else {
-					if err := os.Remove(listenaddr[7:]); err == nil {
-						a.log.Debugln(listenaddr[7:], "was cleaned up")
+					if err := os.Remove(u.Path); err == nil {
+						a.log.Debugln(u.Path, "was cleaned up")
 					} else {
-						a.log.Errorln(listenaddr[7:], "already exists and was not cleaned up:", err)
+						a.log.Errorln(u.Path, "already exists and was not cleaned up:", err)
 						os.Exit(1)
 					}
 				}
 			}
-			a.listener, err = net.Listen("unix", listenaddr[7:])
+			a.listener, err = net.Listen("unix", u.Path)
 			if err == nil {
-				switch listenaddr[7:8] {
+				switch u.Path[:1] {
 				case "@": // maybe abstract namespace
 				default:
-					if err := os.Chmod(listenaddr[7:], 0660); err != nil {
-						a.log.Warnln("WARNING:", listenaddr[:7], "may have unsafe permissions!")
+					if err := os.Chmod(u.Path, 0660); err != nil {
+						a.log.Warnln("WARNING:", u.Path, "may have unsafe permissions!")
 					}
 				}
 			}
 		case "tcp":
 			a.listener, err = net.Listen("tcp", u.Host)
 		default:
-			// err = errors.New(fmt.Sprint("protocol not supported: ", u.Scheme))
 			a.listener, err = net.Listen("tcp", listenaddr)
 		}
 	} else {
@@ -308,23 +303,6 @@ func (a *AdminSocket) handleRequest(conn net.Conn) {
 	encoder.SetIndent("", "  ")
 
 	defer conn.Close()
-
-	/*
-		defer func() {
-			r := recover()
-			if r != nil {
-				fmt.Println("ERROR:", r)
-				a.log.Debugln("Admin socket error:", r)
-				if err := encoder.Encode(&ErrorResponse{
-					Error: "Check your syntax and input types",
-				}); err != nil {
-					fmt.Println("ERROR 2:", err)
-					a.log.Debugln("Admin socket JSON encode error:", err)
-				}
-				conn.Close()
-			}
-		}()
-	*/
 
 	for {
 		var err error

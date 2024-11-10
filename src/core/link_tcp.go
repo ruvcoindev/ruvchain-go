@@ -15,7 +15,6 @@ type linkTCP struct {
 	phony.Inbox
 	*links
 	listenconfig *net.ListenConfig
-	_listeners   map[*Listener]context.CancelFunc
 }
 
 func (l *links) newLinkTCP() *linkTCP {
@@ -24,7 +23,6 @@ func (l *links) newLinkTCP() *linkTCP {
 		listenconfig: &net.ListenConfig{
 			KeepAlive: -1,
 		},
-		_listeners: map[*Listener]context.CancelFunc{},
 	}
 	lt.listenconfig.Control = lt.tcpContext
 	return lt
@@ -69,6 +67,9 @@ func (l *linkTCP) dialersFor(url *url.URL, info linkInfo) ([]*tcpDialer, error) 
 }
 
 func (l *linkTCP) dial(ctx context.Context, url *url.URL, info linkInfo, options linkOptions) (net.Conn, error) {
+	if options.tlsSNI != "" {
+		return nil, ErrLinkSNINotSupported
+	}
 	dialers, err := l.dialersFor(url, info)
 	if err != nil {
 		return nil, err

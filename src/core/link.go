@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"context"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"io"
 	"net"
-	"net/netip"
 	"net/url"
 	"strconv"
 	"strings"
@@ -38,8 +38,11 @@ type links struct {
 	unix  *linkUNIX  // UNIX interface support
 	socks *linkSOCKS // SOCKS interface support
 	quic  *linkQUIC  // QUIC interface support
+	ws    *linkWS    // WS interface support
+	wss   *linkWSS   // WSS interface support
 	// _links can only be modified safely from within the links actor
-	_links map[linkInfo]*link // *link is nil if connection in progress
+	_links     map[linkInfo]*link // *link is nil if connection in progress
+	_listeners map[*Listener]context.CancelFunc
 }
 
 type linkProtocol interface {
@@ -84,13 +87,6 @@ func (l *Listener) Addr() net.Addr {
 	return l.listener.Addr()
 }
 
-func (l *Listener) Close() error {
-	l.Cancel()
-	err := l.listener.Close()
-	<-l.ctx.Done()
-	return err
-}
-
 func (l *links) init(c *Core) error {
 	l.core = c
 	l.tcp = l.newLinkTCP()
@@ -98,33 +94,23 @@ func (l *links) init(c *Core) error {
 	l.unix = l.newLinkUNIX()
 	l.socks = l.newLinkSOCKS()
 	l.quic = l.newLinkQUIC()
+	l.ws = l.newLinkWS()
+	l.wss = l.newLinkWSS()
 	l._links = make(map[linkInfo]*link)
-
-	var listeners []ListenAddress
-	phony.Block(c, func() {
-		listeners = make([]ListenAddress, 0, len(c.config._listeners))
-		for listener := range c.config._listeners {
-			listeners = append(listeners, listener)
-		}
-	})
+	l._listeners = make(map[*Listener]context.CancelFunc)
 
 	return nil
 }
 
 func (l *links) shutdown() {
-	phony.Block(l.tcp, func() {
-		for l := range l.tcp._listeners {
-			_ = l.Close()
+	phony.Block(l, func() {
+		for listener := range l._listeners {
+			_ = listener.listener.Close()
 		}
-	})
-	phony.Block(l.tls, func() {
-		for l := range l.tls._listeners {
-			_ = l.Close()
-		}
-	})
-	phony.Block(l.unix, func() {
-		for l := range l.unix._listeners {
-			_ = l.Close()
+		for _, link := range l._links {
+			if link._conn != nil {
+				_ = link._conn.Close()
+			}
 		}
 	})
 }
@@ -137,9 +123,10 @@ const ErrLinkAlreadyConfigured = linkError("peer is already configured")
 const ErrLinkNotConfigured = linkError("peer is not configured")
 const ErrLinkPriorityInvalid = linkError("priority value is invalid")
 const ErrLinkPinnedKeyInvalid = linkError("pinned public key is invalid")
-const ErrLinkPasswordInvalid = linkError("password is invalid")
+const ErrLinkPasswordInvalid = linkError("invalid password supplied")
 const ErrLinkUnrecognisedSchema = linkError("link schema unknown")
 const ErrLinkMaxBackoffInvalid = linkError("max backoff duration invalid")
+const ErrLinkSNINotSupported = linkError("SNI not supported on this link type")
 
 func (l *links) add(u *url.URL, sintf string, linkType linkType) error {
 	var retErr error
@@ -350,7 +337,7 @@ func (l *links) add(u *url.URL, sintf string, linkType linkType) error {
 
 				// Give the connection to the handler. The handler will block
 				// for the lifetime of the connection.
-				if err = l.handler(linkType, options, lc, resetBackoff); err != nil && err != io.EOF {
+				if err = l.handler(linkType, options, lc, resetBackoff, false); err != nil && err != io.EOF {
 					l.core.log.Debugf("Link %s error: %s\n", info.uri, err)
 				}
 
@@ -360,9 +347,11 @@ func (l *links) add(u *url.URL, sintf string, linkType linkType) error {
 				_ = lc.Close()
 				phony.Block(l, func() {
 					state._conn = nil
-					if state._err = err; state._err != nil {
-						state._errtime = time.Now()
+					if err == nil {
+						err = fmt.Errorf("remote side closed the connection")
 					}
+					state._err = err
+					state._errtime = time.Now()
 				})
 
 				// If the link is persistently configured, back off if needed
@@ -371,15 +360,16 @@ func (l *links) add(u *url.URL, sintf string, linkType linkType) error {
 					if backoffNow() {
 						continue
 					}
-					return
 				}
+				// Ephemeral or incoming connections don't reconnect.
+				return
 			}
 		}()
 	})
 	return retErr
 }
 
-func (l *links) remove(u *url.URL, sintf string, linkType linkType) error {
+func (l *links) remove(u *url.URL, sintf string, _ linkType) error {
 	var retErr error
 	phony.Block(l, func() {
 		// Generate the link info and see whether we think we already
@@ -406,7 +396,7 @@ func (l *links) remove(u *url.URL, sintf string, linkType linkType) error {
 	return retErr
 }
 
-func (l *links) listen(u *url.URL, sintf string) (*Listener, error) {
+func (l *links) listen(u *url.URL, sintf string, local bool) (*Listener, error) {
 	ctx, cancel := context.WithCancel(l.core.ctx)
 	var protocol linkProtocol
 	switch strings.ToLower(u.Scheme) {
@@ -418,6 +408,10 @@ func (l *links) listen(u *url.URL, sintf string) (*Listener, error) {
 		protocol = l.unix
 	case "quic":
 		protocol = l.quic
+	case "ws":
+		protocol = l.ws
+	case "wss":
+		protocol = l.wss
 	default:
 		cancel()
 		return nil, ErrLinkUnrecognisedSchema
@@ -430,7 +424,10 @@ func (l *links) listen(u *url.URL, sintf string) (*Listener, error) {
 	li := &Listener{
 		listener: listener,
 		ctx:      ctx,
-		Cancel:   cancel,
+		Cancel: func() {
+			cancel()
+			_ = listener.Close()
+		},
 	}
 
 	var options linkOptions
@@ -448,11 +445,18 @@ func (l *links) listen(u *url.URL, sintf string) (*Listener, error) {
 		options.password = []byte(p)
 	}
 
+	phony.Block(l, func() {
+		l._listeners[li] = cancel
+	})
+
 	go func() {
-		l.core.log.Infof("%s listener started on %s", strings.ToUpper(u.Scheme), listener.Addr())
-		defer l.core.log.Infof("%s listener stopped on %s", strings.ToUpper(u.Scheme), listener.Addr())
+		l.core.log.Infof("%s listener started on %s", strings.ToUpper(u.Scheme), li.listener.Addr())
+		defer l.core.log.Infof("%s listener stopped on %s", strings.ToUpper(u.Scheme), li.listener.Addr())
+		defer phony.Block(l, func() {
+			delete(l._listeners, li)
+		})
 		for {
-			conn, err := listener.Accept()
+			conn, err := li.listener.Accept()
 			if err != nil {
 				return
 			}
@@ -508,13 +512,22 @@ func (l *links) listen(u *url.URL, sintf string) (*Listener, error) {
 					// Store the state of the link so that it can be queried later.
 					l._links[info] = state
 				})
+				defer phony.Block(l, func() {
+					if l._links[info] == state {
+						delete(l._links, info)
+					}
+				})
 				if lc == nil {
 					return
 				}
 
 				// Give the connection to the handler. The handler will block
 				// for the lifetime of the connection.
-				if err = l.handler(linkTypeIncoming, options, lc, nil); err != nil && err != io.EOF {
+				switch err = l.handler(linkTypeIncoming, options, lc, nil, local); {
+				case err == nil:
+				case errors.Is(err, io.EOF):
+				case errors.Is(err, net.ErrClosed):
+				default:
 					l.core.log.Debugf("Link %s error: %s\n", u.Host, err)
 				}
 
@@ -522,11 +535,6 @@ func (l *links) listen(u *url.URL, sintf string) (*Listener, error) {
 				// try to close the underlying socket just in case and then
 				// drop the link state.
 				_ = lc.Close()
-				phony.Block(l, func() {
-					if l._links[info] == state {
-						delete(l._links, info)
-					}
-				})
 			}(conn)
 		}
 	}()
@@ -546,13 +554,17 @@ func (l *links) connect(ctx context.Context, u *url.URL, info linkInfo, options 
 		dialer = l.unix
 	case "quic":
 		dialer = l.quic
+	case "ws":
+		dialer = l.ws
+	case "wss":
+		dialer = l.wss
 	default:
 		return nil, ErrLinkUnrecognisedSchema
 	}
 	return dialer.dial(ctx, u, info, options)
 }
 
-func (l *links) handler(linkType linkType, options linkOptions, conn net.Conn, success func()) error {
+func (l *links) handler(linkType linkType, options linkOptions, conn net.Conn, success func(), local bool) error {
 	meta := version_getBaseMetadata()
 	meta.publicKey = l.core.public
 	meta.priority = options.priority
@@ -567,7 +579,7 @@ func (l *links) handler(linkType linkType, options linkOptions, conn net.Conn, s
 	switch {
 	case err != nil:
 		return fmt.Errorf("write handshake: %w", err)
-	case err == nil && n != len(metaBytes):
+	case n != len(metaBytes):
 		return fmt.Errorf("incomplete handshake send")
 	}
 	meta = version_metadata{}
@@ -595,19 +607,21 @@ func (l *links) handler(linkType linkType, options linkOptions, conn net.Conn, s
 		}
 	}
 	// Check if we're authorized to connect to this key / IP
-	var allowed map[[32]byte]struct{}
-	phony.Block(l.core, func() {
-		allowed = l.core.config._allowedPublicKeys
-	})
-	isallowed := len(allowed) == 0
-	for k := range allowed {
-		if bytes.Equal(k[:], meta.publicKey) {
-			isallowed = true
-			break
+	if !local {
+		var allowed map[[32]byte]struct{}
+		phony.Block(l.core, func() {
+			allowed = l.core.config._allowedPublicKeys
+		})
+		isallowed := len(allowed) == 0
+		for k := range allowed {
+			if bytes.Equal(k[:], meta.publicKey) {
+				isallowed = true
+				break
+			}
 		}
-	}
-	if linkType == linkTypeIncoming && !isallowed {
-		return fmt.Errorf("node public key %q is not in AllowedPublicKeys", hex.EncodeToString(meta.publicKey))
+		if linkType == linkTypeIncoming && !isallowed {
+			return fmt.Errorf("node public key %q is not in AllowedPublicKeys", hex.EncodeToString(meta.publicKey))
+		}
 	}
 
 	dir := "outbound"
@@ -636,21 +650,11 @@ func (l *links) handler(linkType linkType, options linkOptions, conn net.Conn, s
 		l.core.log.Infof("Disconnected %s: %s, source %s; error: %s",
 			dir, remoteStr, localStr, err)
 	}
-	return nil
+	return err
 }
 
 func urlForLinkInfo(u url.URL) url.URL {
 	u.RawQuery = ""
-	if host, _, err := net.SplitHostPort(u.Host); err == nil {
-		if addr, err := netip.ParseAddr(host); err == nil {
-			// For peers that look like multicast peers (i.e.
-			// link-local addresses), we will ignore the port number,
-			// otherwise we might open multiple connections to them.
-			if addr.IsLinkLocalUnicast() {
-				u.Host = fmt.Sprintf("[%s]", addr.String())
-			}
-		}
-	}
 	return u
 }
 

@@ -3,7 +3,7 @@ package admin
 import (
 	"encoding/hex"
 	"net"
-	"sort"
+	"slices"
 	"strings"
 
 	"github.com/ruvcoindev/ruvchain-go/src/address"
@@ -23,7 +23,7 @@ type PathEntry struct {
 	Sequence  uint64   `json:"sequence"`
 }
 
-func (a *AdminSocket) getPathsHandler(req *GetPathsRequest, res *GetPathsResponse) error {
+func (a *AdminSocket) getPathsHandler(_ *GetPathsRequest, res *GetPathsResponse) error {
 	paths := a.core.GetPaths()
 	res.Paths = make([]PathEntry, 0, len(paths))
 	for _, p := range paths {
@@ -35,8 +35,8 @@ func (a *AdminSocket) getPathsHandler(req *GetPathsRequest, res *GetPathsRespons
 			Sequence:  p.Sequence,
 		})
 	}
-	sort.SliceStable(res.Paths, func(i, j int) bool {
-		return strings.Compare(res.Paths[i].PublicKey, res.Paths[j].PublicKey) < 0
+	slices.SortStableFunc(res.Paths, func(a, b PathEntry) int {
+		return strings.Compare(a.PublicKey, b.PublicKey)
 	})
 	return nil
 }
