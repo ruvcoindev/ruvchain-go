@@ -50,8 +50,8 @@ echo 9 > /tmp/$PKGNAME/debian/compat
 cat > /tmp/$PKGNAME/debian/control << EOF
 Package: $PKGNAME
 Version: $PKGVERSION
-Section: contrib/net
-Priority: extra
+Section: golang
+Priority: optional
 Architecture: $PKGARCH
 Replaces: $PKGREPLACES
 Conflicts: $PKGREPLACES
