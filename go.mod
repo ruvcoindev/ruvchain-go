@@ -1,4 +1,4 @@
-module github.com/yggdrasil-network/yggdrasil-go
+module github.com/ruvcoindev/ruvchain-go
 
 go 1.21
 

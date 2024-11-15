@@ -41,7 +41,7 @@ type handshakeError string
 
 func (e handshakeError) Error() string { return string(e) }
 
-const ErrHandshakeInvalidPreamble = handshakeError("invalid handshake, remote side is not Yggdrasil")
+const ErrHandshakeInvalidPreamble = handshakeError("invalid handshake, remote side is not Ruvchain")
 const ErrHandshakeInvalidLength = handshakeError("invalid handshake length, possible version mismatch")
 const ErrHandshakeInvalidPassword = handshakeError("invalid password supplied, check your config")
 const ErrHandshakeHashFailure = handshakeError("invalid hash length")

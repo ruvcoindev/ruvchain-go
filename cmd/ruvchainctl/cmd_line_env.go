@@ -10,7 +10,7 @@ import (
 	"github.com/hjson/hjson-go/v4"
 	"golang.org/x/text/encoding/unicode"
 
-	"github.com/yggdrasil-network/yggdrasil-go/src/config"
+	"github.com/ruvcoindev/ruvchain-go/src/config"
 )
 
 type CmdLineEnv struct {
@@ -39,7 +39,7 @@ func (cmdLineEnv *CmdLineEnv) parseFlagsAndArgs() {
 		fmt.Println("  - ", os.Args[0], "list")
 		fmt.Println("  - ", os.Args[0], "getPeers")
 		fmt.Println("  - ", os.Args[0], "-endpoint=tcp://localhost:9001 getPeers")
-		fmt.Println("  - ", os.Args[0], "-endpoint=unix:///var/run/ygg.sock getPeers")
+		fmt.Println("  - ", os.Args[0], "-endpoint=unix:///var/run/ruv.sock getPeers")
 	}
 
 	server := flag.String("endpoint", cmdLineEnv.endpoint, "Admin socket endpoint")

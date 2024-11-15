@@ -1,5 +1,5 @@
 /*
-This file generates crypto keys for [ansible-yggdrasil](https://github.com/jcgruenhage/ansible-yggdrasil/)
+This file generates crypto keys for [ansible-ruvchain](https://github.com/jcgruenhage/ansible-ruvchain/)
 */
 package main
 
@@ -12,7 +12,7 @@ import (
 	"os"
 
 	"github.com/cheggaaa/pb/v3"
-	"github.com/yggdrasil-network/yggdrasil-go/src/address"
+	"github.com/ruvcoindev/ruvchain-go/src/address"
 )
 
 var numHosts = flag.Int("hosts", 1, "number of host vars to generate")
@@ -55,8 +55,8 @@ func main() {
 			return
 		}
 		defer file.Close()
-		file.WriteString(fmt.Sprintf("yggdrasil_public_key: %v\n", hex.EncodeToString(keys[i].pub)))
-		file.WriteString("yggdrasil_private_key: \"{{ vault_yggdrasil_private_key }}\"\n")
+		file.WriteString(fmt.Sprintf("ruvchain_public_key: %v\n", hex.EncodeToString(keys[i].pub)))
+		file.WriteString("ruvchain_private_key: \"{{ vault_ruvchain_private_key }}\"\n")
 		file.WriteString(fmt.Sprintf("ansible_host: %v\n", keys[i].ip))
 
 		file, err = os.Create(fmt.Sprintf("host_vars/%x/vault", i))
@@ -64,7 +64,7 @@ func main() {
 			return
 		}
 		defer file.Close()
-		file.WriteString(fmt.Sprintf("vault_yggdrasil_private_key: %v\n", hex.EncodeToString(keys[i].priv)))
+		file.WriteString(fmt.Sprintf("vault_ruvchain_private_key: %v\n", hex.EncodeToString(keys[i].priv)))
 		bar.Increment()
 	}
 	bar.Finish()

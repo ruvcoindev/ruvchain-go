@@ -14,11 +14,11 @@ import (
 	"time"
 
 	"github.com/olekukonko/tablewriter"
-	"github.com/yggdrasil-network/yggdrasil-go/src/admin"
-	"github.com/yggdrasil-network/yggdrasil-go/src/core"
-	"github.com/yggdrasil-network/yggdrasil-go/src/multicast"
-	"github.com/yggdrasil-network/yggdrasil-go/src/tun"
-	"github.com/yggdrasil-network/yggdrasil-go/src/version"
+	"github.com/ruvcoindev/ruvchain-go/src/admin"
+	"github.com/ruvcoindev/ruvchain-go/src/core"
+	"github.com/ruvcoindev/ruvchain-go/src/multicast"
+	"github.com/ruvcoindev/ruvchain-go/src/tun"
+	"github.com/ruvcoindev/ruvchain-go/src/version"
 )
 
 func main() {
@@ -45,7 +45,7 @@ func run() int {
 	if cmdLineEnv.ver {
 		fmt.Println("Build name:", version.BuildName())
 		fmt.Println("Build version:", version.BuildVersion())
-		fmt.Println("To get the version number of the running Yggdrasil node, run", os.Args[0], "getSelf")
+		fmt.Println("To get the version number of the running Ruvchain node, run", os.Args[0], "getSelf")
 		return 0
 	}
 

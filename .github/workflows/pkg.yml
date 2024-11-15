@@ -115,12 +115,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          path: yggdrasil
+          path: ruvchain
 
       - uses: actions/checkout@v4
         with:
-          repository: neilalexander/vyatta-yggdrasil
-          path: vyatta-yggdrasil
+          repository: neilalexander/vyatta-ruvchain
+          path: vyatta-ruvchain
 
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -129,12 +129,12 @@ jobs:
 
       - name: Build package
         env:
-          BUILDDIR_YGG: /home/runner/work/yggdrasil-go/yggdrasil-go/yggdrasil
-        run: cd /home/runner/work/yggdrasil-go/yggdrasil-go/vyatta-yggdrasil && ./build-${{ matrix.pkgarch }}
+          BUILDDIR_RUV: /home/runner/work/ruvchain-go/ruvchain-go/ruvchain
+        run: cd /home/runner/work/ruvchain-go/ruvchain-go/vyatta-ruvchain && ./build-${{ matrix.pkgarch }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: Router package (${{ matrix.pkgarch }})
-          path: "/home/runner/work/yggdrasil-go/yggdrasil-go/vyatta-yggdrasil/*.deb"
+          path: "/home/runner/work/ruvchain-go/ruvchain-go/vyatta-ruvchain/*.deb"
           if-no-files-found: error

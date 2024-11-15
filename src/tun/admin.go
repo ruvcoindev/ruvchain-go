@@ -3,7 +3,7 @@ package tun
 import (
 	"encoding/json"
 
-	"github.com/yggdrasil-network/yggdrasil-go/src/admin"
+	"github.com/ruvcoindev/ruvchain-go/src/admin"
 )
 
 type GetTUNRequest struct{}

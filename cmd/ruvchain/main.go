@@ -19,15 +19,15 @@ import (
 	"github.com/hjson/hjson-go/v4"
 	"github.com/kardianos/minwinsvc"
 
-	"github.com/yggdrasil-network/yggdrasil-go/src/address"
-	"github.com/yggdrasil-network/yggdrasil-go/src/admin"
-	"github.com/yggdrasil-network/yggdrasil-go/src/config"
-	"github.com/yggdrasil-network/yggdrasil-go/src/ipv6rwc"
+	"github.com/ruvcoindev/ruvchain-go/src/address"
+	"github.com/ruvcoindev/ruvchain-go/src/admin"
+	"github.com/ruvcoindev/ruvchain-go/src/config"
+	"github.com/ruvcoindev/ruvchain-go/src/ipv6rwc"
 
-	"github.com/yggdrasil-network/yggdrasil-go/src/core"
-	"github.com/yggdrasil-network/yggdrasil-go/src/multicast"
-	"github.com/yggdrasil-network/yggdrasil-go/src/tun"
-	"github.com/yggdrasil-network/yggdrasil-go/src/version"
+	"github.com/ruvcoindev/ruvchain-go/src/core"
+	"github.com/ruvcoindev/ruvchain-go/src/multicast"
+	"github.com/ruvcoindev/ruvchain-go/src/tun"
+	"github.com/ruvcoindev/ruvchain-go/src/version"
 )
 
 type node struct {
@@ -37,7 +37,7 @@ type node struct {
 	admin     *admin.AdminSocket
 }
 
-// The main function is responsible for configuring and starting Yggdrasil.
+// The main function is responsible for configuring and starting Ruvchain.
 func main() {
 	genconf := flag.Bool("genconf", false, "print a new config to stdout")
 	useconf := flag.Bool("useconf", false, "read HJSON/JSON config from stdin")
@@ -189,7 +189,7 @@ func main() {
 
 	n := &node{}
 
-	// Set up the Yggdrasil node itself.
+	// Set up the Ruvchain node itself.
 	{
 		options := []core.SetupOption{
 			core.NodeInfo(cfg.NodeInfo),

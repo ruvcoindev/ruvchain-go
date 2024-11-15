@@ -16,14 +16,14 @@ import (
 	"github.com/gologme/log"
 	"github.com/wlynxg/anet"
 
-	"github.com/yggdrasil-network/yggdrasil-go/src/core"
+	"github.com/ruvcoindev/ruvchain-go/src/core"
 	"golang.org/x/crypto/blake2b"
 	"golang.org/x/net/ipv6"
 )
 
 // Multicast represents the multicast advertisement and discovery mechanism used
-// by Yggdrasil to find peers on the same subnet. When a beacon is received on a
-// configured multicast interface, Yggdrasil will attempt to peer with that node
+// by Ruvchain to find peers on the same subnet. When a beacon is received on a
+// configured multicast interface, Ruvchain will attempt to peer with that node
 // automatically.
 type Multicast struct {
 	phony.Inbox

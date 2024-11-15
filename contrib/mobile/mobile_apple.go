@@ -16,7 +16,7 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/yggdrasil-network/yggdrasil-go/src/tun"
+	"github.com/ruvcoindev/ruvchain-go/src/tun"
 )
 
 type MobileLogger struct {
@@ -29,7 +29,7 @@ func (nsl MobileLogger) Write(p []byte) (n int, err error) {
 	return len(p), nil
 }
 
-func (m *Yggdrasil) TakeOverTUN(fd int32) error {
+func (m *Ruvchain) TakeOverTUN(fd int32) error {
 	options := []tun.SetupOption{
 		tun.FileDescriptor(fd),
 		tun.InterfaceMTU(m.iprwc.MTU()),

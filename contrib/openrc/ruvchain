@@ -2,10 +2,10 @@
 
 description="An experiment in scalable routing as an encrypted IPv6 overlay network."
 
-CONFFILE="/etc/yggdrasil.conf"
+CONFFILE="/etc/ruvchain.conf"
 pidfile="/run/${RC_SVCNAME}.pid"
 
-command="/usr/bin/yggdrasil"
+command="/usr/bin/ruvchain"
 extra_started_commands="reload"
 
 depend() {
@@ -36,8 +36,8 @@ start() {
 		--pidfile "${pidfile}" \
 		--make-pidfile \
 		--background \
-		--stdout /var/log/yggdrasil.stdout.log \
-		--stderr /var/log/yggdrasil.stderr.log \
+		--stdout /var/log/ruvchain.stdout.log \
+		--stderr /var/log/ruvchain.stderr.log \
 		--exec "${command}" -- -useconffile "${CONFFILE}"
 	eend $?
 }

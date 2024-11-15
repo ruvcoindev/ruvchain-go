@@ -60,14 +60,14 @@ func (s *wsServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	c, err := websocket.Accept(w, r, &websocket.AcceptOptions{
-		Subprotocols: []string{"ygg-ws"},
+		Subprotocols: []string{"ruv-ws"},
 	})
 	if err != nil {
 		return
 	}
 
-	if c.Subprotocol() != "ygg-ws" {
-		c.Close(websocket.StatusPolicyViolation, "client must speak the ygg-ws subprotocol")
+	if c.Subprotocol() != "ruv-ws" {
+		c.Close(websocket.StatusPolicyViolation, "client must speak the ruv-ws subprotocol")
 		return
 	}
 
@@ -91,7 +91,7 @@ func (l *linkWS) dial(ctx context.Context, url *url.URL, info linkInfo, options 
 		return nil, ErrLinkSNINotSupported
 	}
 	wsconn, _, err := websocket.Dial(ctx, url.String(), &websocket.DialOptions{
-		Subprotocols: []string{"ygg-ws"},
+		Subprotocols: []string{"ruv-ws"},
 	})
 	if err != nil {
 		return nil, err

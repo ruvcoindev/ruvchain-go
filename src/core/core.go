@@ -16,12 +16,12 @@ import (
 	"github.com/Arceliar/phony"
 	"github.com/gologme/log"
 
-	"github.com/yggdrasil-network/yggdrasil-go/src/address"
-	"github.com/yggdrasil-network/yggdrasil-go/src/version"
+	"github.com/ruvcoindev/ruvchain-go/src/address"
+	"github.com/ruvcoindev/ruvchain-go/src/version"
 )
 
-// The Core object represents the Yggdrasil node. You should create a Core
-// object for each Yggdrasil node you plan to run.
+// The Core object represents the Ruvchain node. You should create a Core
+// object for each Ruvchain node you plan to run.
 type Core struct {
 	// This is the main data structure that holds everything else for a node
 	// We're going to keep our own copy of the provided config - that way we can
@@ -145,7 +145,7 @@ func (c *Core) RetryPeersNow() {
 	})
 }
 
-// Stop shuts down the Yggdrasil node.
+// Stop shuts down the Ruvchain node.
 func (c *Core) Stop() {
 	phony.Block(c, func() {
 		c.log.Infoln("Stopping...")

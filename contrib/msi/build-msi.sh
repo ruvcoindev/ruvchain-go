@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# This script generates an MSI file for Yggdrasil for a given architecture. It
+# This script generates an MSI file for Ruvchain for a given architecture. It
 # needs to run on Windows within MSYS2 and Go 1.21 or later must be installed on
 # the system and within the PATH. This is ran currently by GitHub Actions (see
 # the workflows in the repository).
@@ -18,7 +18,7 @@ fi
 # Download the wix tools!
 dotnet tool install --global wix --version 5.0.0
 
-# Build Yggdrasil!
+# Build Ruvchain!
 [ "${PKGARCH}" == "x64" ] && GOOS=windows GOARCH=amd64 CGO_ENABLED=0 ./build
 [ "${PKGARCH}" == "x86" ] && GOOS=windows GOARCH=386 CGO_ENABLED=0 ./build
 [ "${PKGARCH}" == "arm" ] && GOOS=windows GOARCH=arm CGO_ENABLED=0 ./build
@@ -26,12 +26,12 @@ dotnet tool install --global wix --version 5.0.0
 
 # Create the postinstall script
 cat > updateconfig.bat << EOF
-if not exist %ALLUSERSPROFILE%\\Yggdrasil (
-  mkdir %ALLUSERSPROFILE%\\Yggdrasil
+if not exist %ALLUSERSPROFILE%\\Ruvchain (
+  mkdir %ALLUSERSPROFILE%\\Ruvchain
 )
-if not exist %ALLUSERSPROFILE%\\Yggdrasil\\yggdrasil.conf (
-  if exist yggdrasil.exe (
-    yggdrasil.exe -genconf > %ALLUSERSPROFILE%\\Yggdrasil\\yggdrasil.conf
+if not exist %ALLUSERSPROFILE%\\Ruvchain\\ruvchain.conf (
+  if exist ruvchain.exe (
+    ruvchain.exe -genconf > %ALLUSERSPROFILE%\\Ruvchain\\ruvchain.conf
   )
 )
 EOF
@@ -69,9 +69,9 @@ else
 fi
 
 if [ $PKGNAME != "master" ]; then
-  PKGDISPLAYNAME="Yggdrasil Network (${PKGNAME} branch)"
+  PKGDISPLAYNAME="Ruvchain Network (${PKGNAME} branch)"
 else
-  PKGDISPLAYNAME="Yggdrasil Network"
+  PKGDISPLAYNAME="Ruvchain Network"
 fi
 
 # Generate the wix.xml file
@@ -85,14 +85,14 @@ cat > wix.xml << EOF
     Language="1033"
     Codepage="1252"
     Version="${PKGVERSIONMS}"
-    Manufacturer="github.com/yggdrasil-network">
+    Manufacturer="github.com/ruvcoindev">
 
     <Package
       Id="*"
       Keywords="Installer"
-      Description="Yggdrasil Network Installer"
-      Comments="Yggdrasil Network standalone router for Windows."
-      Manufacturer="github.com/yggdrasil-network"
+      Description="Ruvchain Network Installer"
+      Comments="Ruvchain Network standalone router for Windows."
+      Manufacturer="github.com/ruvcoindev"
       InstallerVersion="500"
       InstallScope="perMachine"
       Languages="1033"
@@ -110,14 +110,14 @@ cat > wix.xml << EOF
 
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="${PKGINSTFOLDER}" Name="PFiles">
-        <Directory Id="YggdrasilInstallFolder" Name="Yggdrasil">
+        <Directory Id="RuvchainInstallFolder" Name="Ruvchain">
 
           <Component Id="MainExecutable" Guid="c2119231-2aa3-4962-867a-9759c87beb24">
             <File
-              Id="Yggdrasil"
-              Name="yggdrasil.exe"
+              Id="Ruvchain"
+              Name="ruvchain.exe"
               DiskId="1"
-              Source="yggdrasil.exe"
+              Source="ruvchain.exe"
               KeyPath="yes" />
 
             <File
@@ -129,19 +129,19 @@ cat > wix.xml << EOF
             <ServiceInstall
               Id="ServiceInstaller"
               Account="LocalSystem"
-              Description="Yggdrasil Network router process"
-              DisplayName="Yggdrasil Service"
+              Description="Ruvchain Network router process"
+              DisplayName="Ruvchain Service"
               ErrorControl="normal"
               LoadOrderGroup="NetworkProvider"
-              Name="Yggdrasil"
+              Name="Ruvchain"
               Start="auto"
               Type="ownProcess"
-              Arguments='-useconffile "%ALLUSERSPROFILE%\\Yggdrasil\\yggdrasil.conf" -logto "%ALLUSERSPROFILE%\\Yggdrasil\\yggdrasil.log"'
+              Arguments='-useconffile "%ALLUSERSPROFILE%\\Ruvchain\\ruvchain.conf" -logto "%ALLUSERSPROFILE%\\Ruvchain\\ruvchain.log"'
               Vital="yes" />
 
             <ServiceControl
               Id="ServiceControl"
-              Name="yggdrasil"
+              Name="ruvchain"
               Start="install"
               Stop="both"
               Remove="uninstall" />
@@ -149,10 +149,10 @@ cat > wix.xml << EOF
 
           <Component Id="CtrlExecutable" Guid="a916b730-974d-42a1-b687-d9d504cbb86a">
             <File
-              Id="Yggdrasilctl"
-              Name="yggdrasilctl.exe"
+              Id="Ruvchainctl"
+              Name="ruvchainctl.exe"
               DiskId="1"
-              Source="yggdrasilctl.exe"
+              Source="ruvchainctl.exe"
               KeyPath="yes"/>
           </Component>
 
@@ -168,7 +168,7 @@ cat > wix.xml << EOF
       </Directory>
     </Directory>
 
-    <Feature Id="YggdrasilFeature" Title="Yggdrasil" Level="1">
+    <Feature Id="RuvchainFeature" Title="Ruvchain" Level="1">
       <ComponentRef Id="MainExecutable" />
       <ComponentRef Id="CtrlExecutable" />
       <ComponentRef Id="ConfigScript" />
@@ -176,7 +176,7 @@ cat > wix.xml << EOF
 
     <CustomAction
       Id="UpdateGenerateConfig"
-      Directory="YggdrasilInstallFolder"
+      Directory="RuvchainInstallFolder"
       ExeCommand="cmd.exe /c updateconfig.bat"
       Execute="deferred"
       Return="check"

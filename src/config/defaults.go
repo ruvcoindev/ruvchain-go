@@ -1,7 +1,7 @@
 package config
 
-var defaultConfig = ""      // LDFLAGS='-X github.com/yggdrasil-network/yggdrasil-go/src/config.defaultConfig=/path/to/config
-var defaultAdminListen = "" // LDFLAGS='-X github.com/yggdrasil-network/yggdrasil-go/src/config.defaultAdminListen=unix://path/to/sock'
+var defaultConfig = ""      // LDFLAGS='-X github.com/ruvcoindev/ruvchain-go/src/config.defaultConfig=/path/to/config
+var defaultAdminListen = "" // LDFLAGS='-X github.com/ruvcoindev/ruvchain-go/src/config.defaultAdminListen=unix://path/to/sock'
 
 // Defines which parameters are expected by default for configuration on a
 // specific platform. These values are populated in the relevant defaults_*.go
@@ -10,7 +10,7 @@ type platformDefaultParameters struct {
 	// Admin socket
 	DefaultAdminListen string
 
-	// Configuration (used for yggdrasilctl)
+	// Configuration (used for ruvchainctl)
 	DefaultConfigFile string
 
 	// Multicast interfaces

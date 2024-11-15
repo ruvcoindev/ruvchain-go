@@ -43,7 +43,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-* Multicast discovery should now work again when building Yggdrasil as an Android framework
+* Multicast discovery should now work again when building Ruvchain as an Android framework
 * Multicast discovery will now correctly ignore interfaces that are not marked as running
 * Ephemeral links, such as those added by multicast, will no longer try to reconnect in a fast loop, fixing a high CPU issue
 * The TUN interface will no longer stop working when hitting a segment read error from vectorised reads
@@ -79,7 +79,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.5.6] - 2024-05-30
 
-* Go 1.21 is now required to build Yggdrasil
+* Go 1.21 is now required to build Ruvchain
 
 ### Added
 
@@ -151,7 +151,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * Fixed a panic that could occur when a connection reaches an inconsistent error state
 * The admin socket will now report more peering handshake error conditions in `getPeers`
-* Yggdrasil will no longer panic at startup when duplicate peers are configured
+* Ruvchain will no longer panic at startup when duplicate peers are configured
 * The `build` script will no longer incorrectly import `LDFLAGS` from the environment
 
 ## [0.5.1] - 2023-10-28
@@ -176,9 +176,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-* New routing scheme, which is backwards incompatible with previous versions of Yggdrasil
+* New routing scheme, which is backwards incompatible with previous versions of Ruvchain
   * The wire protocol version number, exchanged as part of the peer setup handshake, has been increased to 0.5
-  * Nodes running this new version **will not** be able to peer with earlier versions of Yggdrasil
+  * Nodes running this new version **will not** be able to peer with earlier versions of Ruvchain
   * A DHT is no longer used to map public keys and routes through treespace
   * Bloom filters are used to track on-tree links and nodes reachable via that link
   * Nodes now gossip separate per-link information which is tracked in CRDT structures, forcing local consistency and preventing unnecessary flapping when a route to the root node has changed or is broken
@@ -191,7 +191,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Removed
 
-* Yggdrasil will no longer request BBR congestion control for TCP and TLS peerings on Linux
+* Ruvchain will no longer request BBR congestion control for TCP and TLS peerings on Linux
 
 ## [0.4.7] - 2022-11-20
 
@@ -238,17 +238,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-* `yggdrasilctl` has been refactored and now has cleaner output
+* `ruvchainctl` has been refactored and now has cleaner output
 * It is now possible to `addPeer` and `removePeer` using the admin socket again
 * The `getSessions` admin socket call reports number of bytes received and transmitted again
 * The link setup code has been refactored, making it easier to support new peering types in the future
-* Yggdrasil now maintains configuration internally, rather than relying on a shared and potentially mutable structure
+* Ruvchain now maintains configuration internally, rather than relying on a shared and potentially mutable structure
 
 ### Fixed
 
 * Tracking information about expired root nodes has been fixed, which should hopefully resolve issues with reparenting and connection failures when the root node disappears
 * A bug in the mobile framework code which caused a crash on Android when multicast failed to set up has been fixed
-* Yggdrasil should now shut down gracefully and clean up correctly when running as a Windows service
+* Ruvchain should now shut down gracefully and clean up correctly when running as a Windows service
 
 ## [0.4.4] - 2022-07-07
 
@@ -256,11 +256,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * ICMPv6 "Packet Too Big" payload size has been increased, which should fix Path MTU Discovery (PMTUD) when two nodes have different `IfMTU` values configured
 * A crash has been fixed when handling debug packet responses
-* `yggdrasilctl getSelf` should now report coordinates correctly again
+* `ruvchainctl getSelf` should now report coordinates correctly again
 
 ### Changed
 
-* Go 1.20 is now required to build Yggdrasil
+* Go 1.20 is now required to build Ruvchain
 
 ## [0.4.3] - 2022-02-06
 
@@ -300,9 +300,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-* New routing scheme, which is backwards incompatible with previous versions of Yggdrasil
+* New routing scheme, which is backwards incompatible with previous versions of Ruvchain
   * The wire protocol version number, exchanged as part of the peer setup handshake, has been increased to 0.4
-  * Nodes running this new version **will not** be able to peer with earlier versions of Yggdrasil
+  * Nodes running this new version **will not** be able to peer with earlier versions of Ruvchain
   * Please note that **the network may be temporarily unstable** while infrastructure is being upgraded to the new release
 * TLS connections now use public key pinning
   * If no public key was already pinned, then the public key received as part of the TLS handshake is pinned to the connection
@@ -312,7 +312,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * IP addresses are now derived from ed25519 public (signing) keys
   * Previously, addresses were derived from a hash of X25519 (Diffie-Hellman) keys
-  * Importantly, this means that **all internal IPv6 addresses will change with this release** — this will affect anyone running public services or relying on Yggdrasil for remote access
+  * Importantly, this means that **all internal IPv6 addresses will change with this release** — this will affect anyone running public services or relying on Ruvchain for remote access
 * It is now recommended to peer over TLS
   * Link-local peers from multicast peer discovery will now connect over TLS, with the key from the multicast beacon pinned to the connection
   * `socks://` peers now expect the destination endpoint to be a `tls://` listener, instead of a `tcp://` listener
@@ -330,7 +330,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   * The greedy routing scheme, used to forward all traffic in previous releases, is now only used for protocol traffic (i.e. DHT setup and source route discovery)
   * The routing logic now lives in a [standalone library](https://github.com/Arceliar/ironwood). You are encouraged **not** to use it, as it's still considered pre-alpha, but it's available for those who want to experiment with the new routing algorithm in other contexts
   * Session MTUs may be slightly lower now, in order to accommodate large packet headers if required
-* Many of the admin functions available over `yggdrasilctl` have been changed or removed as part of rewrites to the code
+* Many of the admin functions available over `ruvchainctl` have been changed or removed as part of rewrites to the code
   * Several remote `debug` functions have been added temporarily, to allow for crawling and census gathering during the transition to the new version, but we intend to remove this at some point in the (possibly distant) future
   * The list of available functions will likely be expanded in future releases
 * The configuration file format has been updated in response to the changed/removed features
@@ -339,7 +339,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * Tunnel routing (a.k.a. crypto-key routing or "CKR") has been removed
   * It was far too easy to accidentally break routing altogether by capturing the route to peers with the TUN adapter
-  * We recommend tunnelling an existing standard over Yggdrasil instead (e.g. `ip6gre`, `ip6gretap` or other similar encapsulations, using Yggdrasil IPv6 addresses as the tunnel endpoints)
+  * We recommend tunnelling an existing standard over Ruvchain instead (e.g. `ip6gre`, `ip6gretap` or other similar encapsulations, using Ruvchain IPv6 addresses as the tunnel endpoints)
   * All `TunnelRouting` configuration options will no longer take effect
 * Session firewall has been removed
   * This was never a true firewall — it didn't behave like a stateful IP firewall, often allowed return traffic unexpectedly and was simply a way to prevent a node from being flooded with unwanted sessions, so the name could be misleading and usually lead to a false sense of security
@@ -350,13 +350,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   * It was not obvious which parts of the configuration could be reloaded at runtime, and which required the application to be killed and restarted to take effect
   * Reloading the config without restarting was also a delicate and bug-prone process, and was distracting from more important developments
   * `SIGHUP` will be handled normally (i.e. by exiting)
-* `cmd/yggrasilsim` has been removed, and is unlikely to return to this repository
+* `cmd/ruvrasilsim` has been removed, and is unlikely to return to this repository
 
 ## [0.3.16] - 2021-03-18
 
 ### Added
 
-* New simulation code under `cmd/yggdrasilsim` (work-in-progress)
+* New simulation code under `cmd/ruvchainsim` (work-in-progress)
 
 ### Changed
 
@@ -390,7 +390,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   * By encryption public key: `tcp://host:port?curve25519=key`
   * By both: `tcp://host:port?ed25519=key&curve25519=key`
   * By multiple, in case of DNS round-robin or similar: `tcp://host:port?curve25519=key&curve25519=key&ed25519=key&ed25519=key`
-* Some checks to prevent Yggdrasil-over-Yggdrasil peerings have been added
+* Some checks to prevent Ruvchain-over-Ruvchain peerings have been added
 * Added support for SOCKS proxy authentication, e.g. `socks://user@password:host/...`
 
 ### Fixed
@@ -404,7 +404,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * `DisconnectPeer` and `RemovePeer` have been separated and implemented properly now
 * Less nodes are stored in the DHT now, reducing ambient network traffic and possible instability
-* Default config file for FreeBSD is now at `/usr/local/etc/yggdrasil.conf` instead of `/etc/yggdrasil.conf`
+* Default config file for FreeBSD is now at `/usr/local/etc/ruvchain.conf` instead of `/etc/ruvchain.conf`
 
 ## [0.3.14] - 2020-03-28
 
@@ -424,7 +424,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Windows `.msi` installer files are now supported (bundling the Wireguard TUN driver)
 * NodeInfo code is now actorised, should be more reliable
 * The DHT now tries to store the two closest nodes in either direction instead of one, such that if a node goes offline, the replacement is already known
-* The Yggdrasil API now supports dialing a remote node using the public key instead of the Node ID
+* The Ruvchain API now supports dialing a remote node using the public key instead of the Node ID
 
 ### Changed
 
@@ -432,7 +432,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * DHT search code has been significantly simplified and processes rumoured nodes in parallel, speeding up search time
 * DHT search results are now sorted
 * The systemd service now handles configuration generation in a different unit
-* The Yggdrasil API now returns public keys instead of node IDs when querying for local and remote addresses
+* The Ruvchain API now returns public keys instead of node IDs when querying for local and remote addresses
 
 ### Fixed
 
@@ -452,7 +452,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * New API functions `SetMaximumSessionMTU` and `GetMaximumSessionMTU`
 * New command line parameters `-address` and `-subnet` for getting the address/subnet from the config file, for use with `-useconffile` or `-useconf`
-* A warning is now produced in the Yggdrasil output at startup when the MTU in the config is invalid or has been adjusted for some reason
+* A warning is now produced in the Ruvchain output at startup when the MTU in the config is invalid or has been adjusted for some reason
 
 ### Changed
 
@@ -472,15 +472,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-* Support for TLS listeners and peers has been added, allowing the use of `tls://host:port` in `Peers`, `InterfacePeers` and `Listen` configuration settings - this allows hiding Yggdrasil peerings inside regular TLS connections
+* Support for TLS listeners and peers has been added, allowing the use of `tls://host:port` in `Peers`, `InterfacePeers` and `Listen` configuration settings - this allows hiding Ruvchain peerings inside regular TLS connections
 
 ### Changed
 
-* Go 1.13 or later is now required for building Yggdrasil
+* Go 1.13 or later is now required for building Ruvchain
 * Some exported API functions have been updated to work with standard Go interfaces:
-  * `net.Conn` instead of `yggdrasil.Conn`
-  * `net.Dialer` (the interface it would satisfy if it wasn't a concrete type) instead of `yggdrasil.Dialer`
-  * `net.Listener` instead of `yggdrasil.Listener`
+  * `net.Conn` instead of `ruvchain.Conn`
+  * `net.Dialer` (the interface it would satisfy if it wasn't a concrete type) instead of `ruvchain.Dialer`
+  * `net.Listener` instead of `ruvchain.Listener`
 * Session metadata is now updated correctly when a search completes for a node to which we already have an open session
 * Multicast module reloading behaviour has been improved
 
@@ -493,24 +493,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-* The core library now includes several unit tests for peering and `yggdrasil.Conn` connections
+* The core library now includes several unit tests for peering and `ruvchain.Conn` connections
 
 ### Changed
 
-* On recent Linux kernels, Yggdrasil will now set the `tcp_congestion_control` algorithm used for its own TCP sockets to [BBR](https://github.com/google/bbr), which reduces latency under load
-* The systemd service configuration in `contrib` (and, by extension, some of our packages) now attempts to load the `tun` module, in case TUN/TAP support is available but not loaded, and it restricts Yggdrasil to the `CAP_NET_ADMIN` capability for managing the TUN/TAP adapter, rather than letting it do whatever the (typically `root`) user can do
+* On recent Linux kernels, Ruvchain will now set the `tcp_congestion_control` algorithm used for its own TCP sockets to [BBR](https://github.com/google/bbr), which reduces latency under load
+* The systemd service configuration in `contrib` (and, by extension, some of our packages) now attempts to load the `tun` module, in case TUN/TAP support is available but not loaded, and it restricts Ruvchain to the `CAP_NET_ADMIN` capability for managing the TUN/TAP adapter, rather than letting it do whatever the (typically `root`) user can do
 
 ### Fixed
 
-* The `yggdrasil.Conn.RemoteAddr()` function no longer blocks, fixing a deadlock when CKR is used while under heavy load
+* The `ruvchain.Conn.RemoteAddr()` function no longer blocks, fixing a deadlock when CKR is used while under heavy load
 
 ## [0.3.9] - 2019-09-27
 
 ### Added
 
-* Yggdrasil will now complain more verbosely when a peer URI is incorrectly formatted
+* Ruvchain will now complain more verbosely when a peer URI is incorrectly formatted
 * Soft-shutdown methods have been added, allowing a node to shut down gracefully when terminated
-* New multicast interval logic which sends multicast beacons more often when Yggdrasil is first started to increase the chance of finding nearby nodes quickly after startup
+* New multicast interval logic which sends multicast beacons more often when Ruvchain is first started to increase the chance of finding nearby nodes quickly after startup
 
 ### Changed
 
@@ -530,7 +530,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * A race condition when dialing a remote node by both the node address and routed prefix simultaneously has been fixed
 * A race condition between the router and the dial code resulting in a panic has been fixed
 * A panic which could occur when the TUN/TAP interface disappears (e.g. during soft-shutdown) has been fixed
-* A bug in the semantic versioning script which accompanies Yggdrasil for builds has been fixed
+* A bug in the semantic versioning script which accompanies Ruvchain for builds has been fixed
 * A panic which could occur when the TUN/TAP interface reads an undersized/corrupted packet has been fixed
 
 ### Removed
@@ -541,7 +541,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-* Yggdrasil can now send multiple packets from the switch at once, which results in improved throughput with smaller packets or lower MTUs
+* Ruvchain can now send multiple packets from the switch at once, which results in improved throughput with smaller packets or lower MTUs
 * Performance has been slightly improved by not allocating cancellations where not necessary
 * Crypto-key routing options have been renamed for clarity
   * `IPv4Sources` is now named `IPv4LocalSubnets`
@@ -554,11 +554,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-* A deadlock was fixed in the session code which could result in Yggdrasil failing to pass traffic after some time
+* A deadlock was fixed in the session code which could result in Ruvchain failing to pass traffic after some time
 
 ### Security
 
-* Address verification was not strict enough, which could result in a malicious session sending traffic with unexpected or spoofed source or destination addresses which Yggdrasil could fail to reject
+* Address verification was not strict enough, which could result in a malicious session sending traffic with unexpected or spoofed source or destination addresses which Ruvchain could fail to reject
   * Versions `0.3.6` and `0.3.7` are vulnerable - users of these versions should upgrade as soon as possible
   * Versions `0.3.5` and earlier are not affected
 
@@ -574,7 +574,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * A number of significant performance regressions introduced in version 0.3.6 have been fixed, resulting in better performance
 * Flow labels are now used to prioritise traffic flows again correctly
-* In low-traffic scenarios where there are multiple peerings between a pair of nodes, Yggdrasil now prefers the most active peering instead of the least active, helping to reduce packet reordering
+* In low-traffic scenarios where there are multiple peerings between a pair of nodes, Ruvchain now prefers the most active peering instead of the least active, helping to reduce packet reordering
 * The `Listen` statement, when configured as a string rather than an array, will now be parsed correctly
 * The admin socket now returns `coords` as a correct array of unsigned 64-bit integers, rather than the internal representation
 * The admin socket now returns `box_pub_key` in string format again
@@ -588,19 +588,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-* Yggdrasil now has a public API with interfaces such as `yggdrasil.ConnDialer`, `yggdrasil.ConnListener` and `yggdrasil.Conn` for using Yggdrasil as a transport directly within applications
+* Ruvchain now has a public API with interfaces such as `ruvchain.ConnDialer`, `ruvchain.ConnListener` and `ruvchain.Conn` for using Ruvchain as a transport directly within applications
 * Session gatekeeper functions, part of the API, which can be used to control whether to allow or reject incoming or outgoing sessions dynamically (compared to the previous fixed whitelist/blacklist approach)
 * Support for logging to files or syslog (where supported)
 * Platform defaults now include the ability to set sane defaults for multicast interfaces
 
 ### Changed
 
-* Following a massive refactoring exercise, Yggdrasil's codebase has now been broken out into modules
-* Core node functionality in the `yggdrasil` package with a public API
-  * This allows Yggdrasil to be integrated directly into other applications and used as a transport
-  * IP-specific code has now been moved out of the core `yggdrasil` package, making Yggdrasil effectively protocol-agnostic
+* Following a massive refactoring exercise, Ruvchain's codebase has now been broken out into modules
+* Core node functionality in the `ruvchain` package with a public API
+  * This allows Ruvchain to be integrated directly into other applications and used as a transport
+  * IP-specific code has now been moved out of the core `ruvchain` package, making Ruvchain effectively protocol-agnostic
 * Multicast peer discovery functionality is now in the `multicast` package
-* Admin socket functionality is now in the `admin` package and uses the Yggdrasil public API
+* Admin socket functionality is now in the `admin` package and uses the Ruvchain public API
 * TUN/TAP, ICMPv6 and all IP-specific functionality is now in the `tuntap` package
 * `PPROF` debug output is now sent to `stderr` instead of `stdout`
 * Node IPv6 addresses on macOS are now configured as `secured`
@@ -609,7 +609,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 * Multicast discovery is no longer disabled if the nominated interfaces aren't available on the system yet, e.g. during boot
-* Multicast interfaces are now re-evaluated more frequently so that Yggdrasil doesn't need to be restarted to use interfaces that have become available since startup
+* Multicast interfaces are now re-evaluated more frequently so that Ruvchain doesn't need to be restarted to use interfaces that have become available since startup
 * Admin socket error cases are now handled better
 * Various fixes in the TUN/TAP module, particularly surrounding Windows platform support
 * Invalid keys will now cause the node to fail to start, rather than starting but silently not working as before
@@ -636,9 +636,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * New multicast behaviour where each multicast interface is given its own link-local listener and does not depend on the `Listen` configuration
 * Blocking detection in the switch to avoid parenting a blocked peer
 * Support for adding and removing listeners and multicast interfaces when reloading configuration during runtime
-* Yggdrasil will now attempt to clean up UNIX admin sockets on startup if left behind by a previous crash
+* Ruvchain will now attempt to clean up UNIX admin sockets on startup if left behind by a previous crash
 * Admin socket `getTunnelRouting` and `setTunnelRouting` calls for enabling and disabling crypto-key routing during runtime
-* On macOS, Yggdrasil will now try to wake up AWDL on start-up when `awdl0` is a configured multicast interface, to keep it awake after system sleep, and to stop waking it when no longer needed
+* On macOS, Ruvchain will now try to wake up AWDL on start-up when `awdl0` is a configured multicast interface, to keep it awake after system sleep, and to stop waking it when no longer needed
 * Added `LinkLocalTCPPort` option for controlling the port number that link-local TCP listeners will listen on by default when setting up `MulticastInterfaces` (a node restart is currently required for changes to `LinkLocalTCPPort` to take effect - it cannot be updated by reloading config during runtime)
 
 ### Changed
@@ -653,19 +653,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 * Admin socket `getTunTap` call now returns properly instead of claiming no interface is enabled in all cases
-* Handling of `getRoutes` etc in `yggdrasilctl` is now working
+* Handling of `getRoutes` etc in `ruvchainctl` is now working
 * Local interface names are no longer leaked in multicast packets
 * Link-local TCP connections, particularly those initiated because of multicast beacons, are now always correctly scoped for the target interface
-* Yggdrasil now correctly responds to multicast interfaces going up and down during runtime
+* Ruvchain now correctly responds to multicast interfaces going up and down during runtime
 
 ## [0.3.3] - 2019-02-18
 
 ### Added
 
 * Dynamic reconfiguration, which allows reloading the configuration file to make changes during runtime by sending a `SIGHUP` signal (note: this only works with `-useconffile` and not `-useconf` and currently reconfiguring TUN/TAP is not supported)
-* Support for building Yggdrasil as an iOS or Android framework if the appropriate tools (e.g. `gomobile`/`gobind` + SDKs) are available
+* Support for building Ruvchain as an iOS or Android framework if the appropriate tools (e.g. `gomobile`/`gobind` + SDKs) are available
 * Connection contexts used for TCP connections which allow more exotic socket options to be set, e.g.
-  * Reusing the multicast socket to allow multiple running Yggdrasil instances without having to disable multicast
+  * Reusing the multicast socket to allow multiple running Ruvchain instances without having to disable multicast
   * Allowing supported Macs to peer with other nearby Macs that aren't even on the same Wi-Fi network using AWDL
 * Flexible logging support, which allows for logging at different levels of verbosity
 
@@ -717,41 +717,41 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-* Default `AdminListen` in newly generated config is now `unix:///var/run/yggdrasil.sock`
+* Default `AdminListen` in newly generated config is now `unix:///var/run/ruvchain.sock`
 * Formatting of `getRoutes` in the admin socket has been improved
-* Debian package now adds `yggdrasil` group to assist with `AF_UNIX` admin socket permissions
+* Debian package now adds `ruvchain` group to assist with `AF_UNIX` admin socket permissions
 * Crypto, address and other utility code refactored into separate Go packages
 
 ### Fixed
 
 * Switch peer convergence is now much faster again (previously it was taking up to a minute once the peering was established)
-* `yggdrasilctl` is now less prone to crashing when parameters are specified incorrectly
+* `ruvchainctl` is now less prone to crashing when parameters are specified incorrectly
 * Panic fixed when `Peers` or `InterfacePeers` was commented out
 
 ## [0.3.0] - 2018-12-12
 
 ### Added
 
-* Crypto-key routing support for tunnelling both IPv4 and IPv6 over Yggdrasil
+* Crypto-key routing support for tunnelling both IPv4 and IPv6 over Ruvchain
 * Add advanced `SwitchOptions` in configuration file for tuning the switch
 * Add `dhtPing` to the admin socket to aid in crawling the network
 * New macOS .pkgs built automatically by CircleCI
 * Add Dockerfile to repository for Docker support
 * Add `-json` command line flag for generating and normalising configuration in plain JSON instead of HJSON
-* Build name and version numbers are now imprinted onto the build, accessible through `yggdrasil -version` and `yggdrasilctl getSelf`
+* Build name and version numbers are now imprinted onto the build, accessible through `ruvchain -version` and `ruvchainctl getSelf`
 * Add ability to disable admin socket by setting `AdminListen` to `"none"`
-* `yggdrasilctl` now tries to look for the default configuration file to find `AdminListen` if `-endpoint` is not specified
-* `yggdrasilctl` now returns more useful logging in the event of a fatal error
+* `ruvchainctl` now tries to look for the default configuration file to find `AdminListen` if `-endpoint` is not specified
+* `ruvchainctl` now returns more useful logging in the event of a fatal error
 
 ### Changed
 
 * Switched to Chord DHT (instead of Kademlia, although still compatible at the protocol level)
-* The `AdminListen` option and `yggdrasilctl` now default to `unix:///var/run/yggdrasil.sock` on BSDs, macOS and Linux
+* The `AdminListen` option and `ruvchainctl` now default to `unix:///var/run/ruvchain.sock` on BSDs, macOS and Linux
 * Cleaned up some of the parameter naming in the admin socket
 * Latency-based parent selection for the switch instead of uptime-based (should help to avoid high latency links somewhat)
 * Real peering endpoints now shown in the admin socket `getPeers` call to help identify peerings
-* Reuse the multicast port on supported platforms so that multiple Yggdrasil processes can run
-* `yggdrasilctl` now has more useful help text (with `-help` or when no arguments passed)
+* Reuse the multicast port on supported platforms so that multiple Ruvchain processes can run
+* `ruvchainctl` now has more useful help text (with `-help` or when no arguments passed)
 
 ### Fixed
 
@@ -795,7 +795,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-* Make `yggdrasilctl` less case sensitive
+* Make `ruvchainctl` less case sensitive
 * More verbose TCP disconnect messages
 
 ### Fixed
@@ -836,7 +836,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-* Add `yggdrasilconf` utility for testing with the `vyatta-yggdrasil` package.
+* Add `ruvchainconf` utility for testing with the `vyatta-ruvchain` package.
 * Add a randomized retry delay after TCP disconnects, to prevent synchronization livelocks.
 
 ### Changed
