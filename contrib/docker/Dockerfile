@@ -1,25 +1,45 @@
-FROM docker.io/golang:alpine as builder
+# Git cloning
+FROM		debian:bullseye-slim AS code-cloner
 
-COPY . /src
-WORKDIR /src
+WORKDIR		/src
 
-ENV CGO_ENABLED=0
+RUN			apt-get update && apt-get install -y git 
+RUN			git clone https://github.com/ruvcoindev/ruvchain-go
 
-RUN apk add git && ./build && go build -o /src/genkeys cmd/genkeys/main.go
 
-FROM docker.io/alpine
+# Compiling
+FROM		golang:1.17-alpine AS builder
+ENV			CGO_ENABLED 0
+ENV			TZ=Europe/Moscow
 
-COPY --from=builder /src/ruvchain /usr/bin/ruvchain
-COPY --from=builder /src/ruvchainctl /usr/bin/ruvchainctl
-COPY --from=builder /src/genkeys /usr/bin/genkeys
-COPY contrib/docker/entrypoint.sh /usr/bin/entrypoint.sh
+COPY		--from=code-cloner /src /src
+WORKDIR		/src/ruvchain-go
+RUN			./build && rm -rf /root /go
 
-# RUN addgroup -g 1000 -S ruvcoindev \
-#  && adduser -u 1000 -S -g 1000 --home /etc/ruvcoindev ruvcoindev
-#
-# USER ruvcoindev
-# TODO: Make running unprivileged work
 
-VOLUME [ "/etc/ruvcoindev" ]
+# Compressing binary
+FROM		gruebel/upx:latest as upx
+COPY		--from=builder /src/ruvchain-go/ruvchain /app.fat
+COPY		--from=builder /src/ruvchain-go/ruvchainctl /appctl.fat
+RUN			upx --best --lzma -o /ruvchain /app.fat
+RUN			upx --best --lzma -o /ruvchainctl /appctl.fat
 
-ENTRYPOINT [ "/usr/bin/entrypoint.sh" ]
+
+# Intermidate image
+# Compressing layers
+FROM		alpine as inter
+
+COPY		--from=upx /ruvchain /ruvchain
+COPY		--from=upx /ruvchainctl /ruvchainctl
+COPY		--from=builder /var /var
+COPY		--from=builder /run /run
+COPY		entrypoint.sh /entrypoint.sh
+
+
+# Final image
+FROM		scratch
+
+COPY		--from=inter / /
+
+VOLUME		[ "/config" ]
+ENTRYPOINT	[ "sh", "/entrypoint.sh" ]
