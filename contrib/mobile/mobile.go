@@ -54,7 +54,7 @@ func (m *Ruvchain) StartJSON(configjson []byte) error {
 	// Set up the Ruvchain node itself.
 	{
 		iprange := net.IPNet{
-			IP:   net.ParseIP("200::"),
+			IP:   net.ParseIP("fa00::"),
 			Mask: net.CIDRMask(7, 128),
 		}
 		options := []core.SetupOption{

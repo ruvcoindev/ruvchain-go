@@ -114,7 +114,7 @@ func (l *linkWS) dial(ctx context.Context, url *url.URL, info linkInfo, options 
 					DialContext: dialer.DialContext,
 				},
 			},
-			Subprotocols: []string{"ygg-ws"},
+			Subprotocols: []string{"ruv-ws"},
 			Host:         hostname,
 		})
 		if err != nil {

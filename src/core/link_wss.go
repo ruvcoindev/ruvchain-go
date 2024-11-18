@@ -31,13 +31,13 @@ func (l *links) newLinkWSS() *linkWSS {
 }
 
 func (l *linkWSS) dial(ctx context.Context, url *url.URL, info linkInfo, options linkOptions) (net.Conn, error) {
-<<<<<<< HEAD
+
 	if options.tlsSNI != "" {
 		return nil, ErrLinkSNINotSupported
 	}
 	wsconn, _, err := websocket.Dial(ctx, url.String(), &websocket.DialOptions{
 		Subprotocols: []string{"ruv-ws"},
-=======
+
 	tlsconfig := l.tlsconfig.Clone()
 	return l.links.findSuitableIP(url, func(hostname string, ip net.IP, port int) (net.Conn, error) {
 		tlsconfig.ServerName = hostname
@@ -60,7 +60,7 @@ func (l *linkWSS) dial(ctx context.Context, url *url.URL, info linkInfo, options
 					TLSClientConfig: tlsconfig,
 				},
 			},
-			Subprotocols: []string{"ygg-ws"},
+			Subprotocols: []string{"ruv-ws"},
 			Host:         hostname,
 		})
 		if err != nil {
@@ -69,7 +69,7 @@ func (l *linkWSS) dial(ctx context.Context, url *url.URL, info linkInfo, options
 		return &linkWSSConn{
 			Conn: websocket.NetConn(ctx, wsconn, websocket.MessageBinary),
 		}, nil
->>>>>>> c22a746a1d166b0060ce4b0b0496b82a1a96e29b
+
 	})
 }
 
