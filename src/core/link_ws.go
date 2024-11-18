@@ -88,13 +88,6 @@ func (l *links) newLinkWS() *linkWS {
 }
 
 func (l *linkWS) dial(ctx context.Context, url *url.URL, info linkInfo, options linkOptions) (net.Conn, error) {
-
-	if options.tlsSNI != "" {
-		return nil, ErrLinkSNINotSupported
-	}
-	wsconn, _, err := websocket.Dial(ctx, url.String(), &websocket.DialOptions{
-		Subprotocols: []string{"ruv-ws"},
-
 	return l.links.findSuitableIP(url, func(hostname string, ip net.IP, port int) (net.Conn, error) {
 		u := *url
 		u.Host = net.JoinHostPort(ip.String(), fmt.Sprintf("%d", port))
@@ -123,7 +116,6 @@ func (l *linkWS) dial(ctx context.Context, url *url.URL, info linkInfo, options 
 		return &linkWSConn{
 			Conn: websocket.NetConn(ctx, wsconn, websocket.MessageBinary),
 		}, nil
-
 	})
 }
 
